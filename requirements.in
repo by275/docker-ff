@@ -1,0 +1,41 @@
+flask<2.0.0
+flask-cors
+flask-login
+flask-markdown
+flask-sqlalchemy
+flask-socketio<5.0.0
+python-socketio<5.0.0
+python-engineio<4.0.0
+apscheduler
+discord-webhook
+pycryptodome
+pyyaml                          # plugin/fileprocess_ktv lib/system/logic_terminal.py
+markupsafe<2.1.0                # temporary fix
+    # core
+psutil
+selenium
+celery[redis]<5.2.0
+redis<4.2.0
+gevent
+gevent-websocket
+greenlet
+pillow
+lxml
+    # minimal
+guessit
+    # plugin/fileprocess_movie
+PlexAPI
+    # plugin/plex
+sqlitedict
+oauth2client
+google-api-python-client
+    # plugin/gdrive_scan
+tmdbsimple
+tvdb-api
+    # plugin/lib_metadata
+xmltodict
+watchdog
+    # plugin/plex_mate
+gspread
+gspread_formatting
+    # lib2/support/tool
