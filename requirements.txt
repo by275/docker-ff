@@ -32,9 +32,9 @@ certifi==2022.6.15
     # via
     #   requests
     #   urllib3
-cffi==1.15.0
+cffi==1.15.1
     # via cryptography
-charset-normalizer==2.0.12
+charset-normalizer==2.1.0
     # via requests
 click==7.1.2
     # via
@@ -49,7 +49,7 @@ click-plugins==1.1.1
     # via celery
 click-repl==0.2.0
     # via celery
-cryptography==37.0.2
+cryptography==37.0.4
     # via
     #   pyopenssl
     #   urllib3
@@ -82,9 +82,9 @@ gevent-websocket==0.10.1
     # via -r requirements.in
 google-api-core==2.8.2
     # via google-api-python-client
-google-api-python-client==2.51.0
+google-api-python-client==2.53.0
     # via -r requirements.in
-google-auth==2.8.0
+google-auth==2.9.1
     # via
     #   google-api-core
     #   google-api-python-client
@@ -95,7 +95,7 @@ google-auth-httplib2==0.1.0
     # via google-api-python-client
 google-auth-oauthlib==0.5.2
     # via gspread
-googleapis-common-protos==1.56.3
+googleapis-common-protos==1.56.4
     # via google-api-core
 greenlet==1.1.2
     # via
@@ -132,9 +132,9 @@ jinja2==2.11.3
     # via flask
 kombu==5.2.4
     # via celery
-lxml==4.9.0
+lxml==4.9.1
     # via -r requirements.in
-markdown==3.3.7
+markdown==3.4.1
     # via flask-markdown
 markupsafe==2.0.1
     # via
@@ -148,11 +148,11 @@ outcome==1.2.0
     # via trio
 packaging==21.3
     # via redis
-pillow==9.1.1
+pillow==9.2.0
     # via -r requirements.in
 plexapi==4.11.2
     # via -r requirements.in
-prompt-toolkit==3.0.29
+prompt-toolkit==3.0.30
     # via click-repl
 protobuf==4.21.2
     # via
@@ -205,7 +205,7 @@ redis==4.1.4
     # via
     #   -r requirements.in
     #   celery
-requests==2.28.0
+requests==2.28.1
     # via
     #   discord-webhook
     #   google-api-core
@@ -259,7 +259,7 @@ tzlocal==4.2
     # via apscheduler
 uritemplate==4.1.1
     # via google-api-python-client
-urllib3[secure,socks]==1.26.9
+urllib3[secure,socks]==1.26.10
     # via
     #   requests
     #   selenium
@@ -282,7 +282,7 @@ wsproto==1.1.0
     # via trio-websocket
 xmltodict==0.13.0
     # via -r requirements.in
-zipp==3.8.0
+zipp==3.8.1
     # via
     #   importlib-metadata
     #   importlib-resources
