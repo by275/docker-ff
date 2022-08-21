@@ -31,10 +31,8 @@ celery[redis]==5.1.2
 certifi==2022.6.15
     # via
     #   requests
-    #   urllib3
-cffi==1.15.1
-    # via cryptography
-charset-normalizer==2.1.0
+    #   selenium
+charset-normalizer==2.1.1
     # via requests
 click==7.1.2
     # via
@@ -49,10 +47,6 @@ click-plugins==1.1.1
     # via celery
 click-repl==0.2.0
     # via celery
-cryptography==37.0.4
-    # via
-    #   pyopenssl
-    #   urllib3
 deprecated==1.2.13
     # via redis
 discord-webhook==0.16.3
@@ -82,9 +76,9 @@ gevent-websocket==0.10.1
     # via -r requirements.in
 google-api-core==2.8.2
     # via google-api-python-client
-google-api-python-client==2.55.0
+google-api-python-client==2.57.0
     # via -r requirements.in
-google-auth==2.10.0
+google-auth==2.11.0
     # via
     #   google-api-core
     #   google-api-python-client
@@ -121,7 +115,6 @@ idna==3.3
     # via
     #   requests
     #   trio
-    #   urllib3
 importlib-metadata==4.12.0
     # via markdown
 importlib-resources==5.9.0
@@ -154,7 +147,7 @@ plexapi==4.12.1
     # via -r requirements.in
 prompt-toolkit==3.0.30
     # via click-repl
-protobuf==4.21.4
+protobuf==4.21.5
     # via
     #   google-api-core
     #   googleapis-common-protos
@@ -169,12 +162,8 @@ pyasn1-modules==0.2.8
     # via
     #   google-auth
     #   oauth2client
-pycparser==2.21
-    # via cffi
 pycryptodome==3.15.0
     # via -r requirements.in
-pyopenssl==22.0.0
-    # via urllib3
 pyparsing==3.0.9
     # via
     #   httplib2
@@ -191,7 +180,7 @@ python-socketio==4.6.1
     # via
     #   -r requirements.in
     #   flask-socketio
-pytz==2022.1
+pytz==2022.2.1
     # via
     #   apscheduler
     #   celery
@@ -222,7 +211,7 @@ rsa==4.9
     # via
     #   google-auth
     #   oauth2client
-selenium==4.3.0
+selenium==4.4.3
     # via -r requirements.in
 six==1.16.0
     # via
@@ -253,13 +242,13 @@ trio-websocket==0.9.2
     # via selenium
 tvdb-api==3.1.0
     # via -r requirements.in
-tzdata==2022.1
+tzdata==2022.2
     # via pytz-deprecation-shim
 tzlocal==4.2
     # via apscheduler
 uritemplate==4.1.1
     # via google-api-python-client
-urllib3[secure,socks]==1.26.11
+urllib3[socks]==1.26.11
     # via
     #   requests
     #   selenium
