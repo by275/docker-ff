@@ -28,7 +28,7 @@ cachetools==5.2.0
     # via google-auth
 celery[redis]==5.1.2
     # via -r requirements.in
-certifi==2022.6.15
+certifi==2022.9.14
     # via
     #   requests
     #   selenium
@@ -49,7 +49,7 @@ click-repl==0.2.0
     # via celery
 deprecated==1.2.13
     # via redis
-discord-webhook==0.16.3
+discord-webhook==0.17.0
     # via -r requirements.in
 flask==1.1.4
     # via
@@ -74,9 +74,9 @@ gevent==21.12.0
     #   gevent-websocket
 gevent-websocket==0.10.1
     # via -r requirements.in
-google-api-core==2.8.2
+google-api-core==2.10.1
     # via google-api-python-client
-google-api-python-client==2.57.0
+google-api-python-client==2.61.0
     # via -r requirements.in
 google-auth==2.11.0
     # via
@@ -87,16 +87,16 @@ google-auth==2.11.0
     #   gspread
 google-auth-httplib2==0.1.0
     # via google-api-python-client
-google-auth-oauthlib==0.5.2
+google-auth-oauthlib==0.5.3
     # via gspread
 googleapis-common-protos==1.56.4
     # via google-api-core
-greenlet==1.1.2
+greenlet==1.1.3
     # via
     #   -r requirements.in
     #   gevent
     #   sqlalchemy
-gspread==5.4.0
+gspread==5.5.0
     # via
     #   -r requirements.in
     #   gspread-formatting
@@ -111,7 +111,7 @@ httplib2==0.20.4
     #   google-api-python-client
     #   google-auth-httplib2
     #   oauth2client
-idna==3.3
+idna==3.4
     # via
     #   requests
     #   trio
@@ -135,7 +135,7 @@ markupsafe==2.0.1
     #   jinja2
 oauth2client==4.1.3
     # via -r requirements.in
-oauthlib==3.2.0
+oauthlib==3.2.1
     # via requests-oauthlib
 outcome==1.2.0
     # via trio
@@ -143,15 +143,15 @@ packaging==21.3
     # via redis
 pillow==9.2.0
     # via -r requirements.in
-plexapi==4.12.1
+plexapi==4.13.0
     # via -r requirements.in
-prompt-toolkit==3.0.30
+prompt-toolkit==3.0.31
     # via click-repl
-protobuf==4.21.5
+protobuf==4.21.6
     # via
     #   google-api-core
     #   googleapis-common-protos
-psutil==5.9.1
+psutil==5.9.2
     # via -r requirements.in
 pyasn1==0.4.8
     # via
@@ -224,11 +224,11 @@ six==1.16.0
     #   python-dateutil
     #   python-engineio
     #   python-socketio
-sniffio==1.2.0
+sniffio==1.3.0
     # via trio
 sortedcontainers==2.4.0
     # via trio
-sqlalchemy==1.4.40
+sqlalchemy==1.4.41
     # via flask-sqlalchemy
 sqlitedict==2.0.0
     # via -r requirements.in
@@ -248,7 +248,7 @@ tzlocal==4.2
     # via apscheduler
 uritemplate==4.1.1
     # via google-api-python-client
-urllib3[socks]==1.26.11
+urllib3[socks]==1.26.12
     # via
     #   requests
     #   selenium
@@ -267,7 +267,7 @@ werkzeug==1.0.1
     #   flask-login
 wrapt==1.14.1
     # via deprecated
-wsproto==1.1.0
+wsproto==1.2.0
     # via trio-websocket
 xmltodict==0.13.0
     # via -r requirements.in
