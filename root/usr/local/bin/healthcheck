@@ -1,0 +1,33 @@
+#!/usr/bin/python3
+import sys
+
+import requests
+import yaml
+
+try:
+    with open("/data/config.yaml", encoding="utf-8") as f:
+        port = yaml.load(f, Loader=yaml.FullLoader).get("port")
+except Exception:
+    port = None
+
+if port is None:
+    import sqlite3
+    from contextlib import closing
+    conn = sqlite3.connect("/data/db/system.db")
+    conn.row_factory = sqlite3.Row
+    with closing(conn.cursor()) as c:
+        port = c.execute("select value from system_setting where key = 'port'").fetchone()[0]
+    conn.close()
+
+try:
+    res = requests.head(f"http://localhost:{port}/version")
+except Exception as e:
+    print(f"ERROR: {str(e)}")    
+else:
+    if res.status_code == 200:
+        print("OK")
+        sys.exit(0)
+    else:
+        print(f"ERROR: HTTP STATUS: {res.status_code}")
+
+sys.exit(1)

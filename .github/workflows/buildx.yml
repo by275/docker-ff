@@ -70,5 +70,5 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           description: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ env.APP_VER }}
+            ${{ env.IMAGE_NAME }}:ff
+            ${{ env.IMAGE_NAME }}:ff-${{ env.APP_VER }}

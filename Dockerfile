@@ -192,6 +192,9 @@ ENV \
 # add build artifacts
 COPY --from=collector /bar/ /
 
+HEALTHCHECK --interval=30s --timeout=30s --start-period=50s --retries=3 \
+    CMD /usr/local/bin/healthcheck
+
 VOLUME /data
 WORKDIR /data
 
