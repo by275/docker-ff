@@ -1,29 +1,26 @@
 #!/usr/bin/with-contenv bash
 
-if [ "${USE_CELERY}" = "true" ]; then
-    s6-svwait -U /var/run/service/celery
+if [ "${PUID}" = "0" ] && [ "${PGID}" = "0" ]; then
+    export C_FORCE_ROOT="true"
+    export PYTHONWARNINGS="ignore::RuntimeWarning"
 fi
 
-cd /app
+# workdir
+cd /data
 
-echo "*** starting SJVA..."
+echo "*** starting FlaskFarm..."
 s6-setuidgid abc \
-    python sjva3.py \
-        --repeat=${SJVA_REPEAT_COUNT} \
-        --use_gevent=${USE_GEVENT} \
-        --use_celery=${USE_CELERY} \
-        --port=${SJVA_PORT}
+    python -m flaskfarm.main \
+        --repeat=${FF_REPEAT} \
+        --config=${FF_CONFIG}
 
 EXITCODE=$?
-echo "*** SJVA exited with code ${EXITCODE}"
+echo "*** FlaskFarm exited with code ${EXITCODE}"
 if [ "$EXITCODE" = "0" ]; then
     echo '*** terminating all services...'
     s6-svscanctl -t /var/run/service
 else
     echo "*** restarting services..."
-    printf $(expr $SJVA_REPEAT_COUNT + 1) > /var/run/s6/container_environment/SJVA_REPEAT_COUNT
+    printf $(expr $FF_REPEAT + 1) > /var/run/s6/container_environment/FF_REPEAT
     /etc/cont-init.d/20-config
-    if [ "${USE_CELERY}" = "true" ]; then
-        s6-svc -wR -r /var/run/service/celery
-    fi
 fi

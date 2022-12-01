@@ -1,41 +1,29 @@
-flask<2.0.0
-flask-cors
-flask-login
-flask-markdown
-flask-sqlalchemy<3              # >=3 requires Flask>=2.2
-flask-socketio<5.0.0
-python-socketio<5.0.0
-python-engineio<4.0.0
-apscheduler
-discord-webhook
-pycryptodome
-pyyaml                          # plugin/fileprocess_ktv lib/system/logic_terminal.py
-markupsafe<2.1.0                # temporary fix
-    # core
-psutil
+-r https://raw.githubusercontent.com/flaskfarm/flaskfarm/main/files/requirements_mini.txt
+    # mini
+-r https://raw.githubusercontent.com/flaskfarm/flaskfarm/main/files/requirements_normal.txt
+    # normal
 selenium
-celery[redis]<5.2.0
-redis<4.2.0
-gevent
-gevent-websocket
-greenlet
 pillow
 lxml
     # minimal
-guessit
-    # plugin/fileprocess_movie
-PlexAPI
-    # plugin/plex
 sqlitedict
-oauth2client
-google-api-python-client
-    # plugin/gdrive_scan
+    # plugin/torrent_info
+discord.py
+    # plugin/discord_bot
+xmltodict
+    # plugin/plex_mate
 tmdbsimple
 tvdb-api
-    # plugin/lib_metadata
-xmltodict
-watchdog
-    # plugin/plex_mate
-gspread
-gspread_formatting
-    # lib2/support/tool
+    # plugin/metadata
+# guessit
+#     # plugin/fileprocess_movie
+# PlexAPI
+#     # plugin/plex
+# oauth2client
+# google-api-python-client
+#     # plugin/gdrive_scan
+# watchdog
+#     # plugin/plex_mate
+# gspread
+# gspread_formatting
+#     # lib2/support/tool

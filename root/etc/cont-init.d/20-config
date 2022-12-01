@@ -1,42 +1,56 @@
 #!/usr/bin/with-contenv bash
+. /usr/local/bin/variables
 set -e
 
-git_pull() {
-  if [ $# -lt 1 ]; then return 1; fi
-  if [ -z "${1}" ] || [ ! -d "${1}" ]; then return 1; fi
-  git config --global --get-all safe.directory | grep -wq "${1}" || \
-    git config --global --add safe.directory "${1}"
-  if [ "$(git -C "${1}" rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
-    git_dir=$(git -C "${1}" rev-parse --absolute-git-dir 2>/dev/null)
-    find "${git_dir}" -name "index.lock" -exec rm -f {} \;
-    git_url=$(git -C "${1}" config --get remote.origin.url 2>/dev/null)
-    git_repo=$(echo "${git_url}" | cut -d/ -f4-)
-    echo "*** checking for updates: ${git_repo%%.git}"
-    git -C "${1}" reset --quiet --hard HEAD
-    RESP=$(git -C "${1}" pull 2>&1 |tee /dev/null; exit ${PIPESTATUS[0]}) && \
-      { if ! echo "$RESP" | grep -q "up to date"; then echo -e "$RESP" | ( TAB=$'    ' ; sed "s/^/$TAB/" ); fi } || \
-      { echo "    $RESP"; echo "    re-installing to '${1}'..." && \
-        rm -rf "${1}" && git -C "$(dirname "$1")" clone --quiet --depth 1 "${git_url}" > /dev/null
-      }
-  fi
-}
+repo=$(echo "${FF_GIT}" | cut -d/ -f4-)
+repo="${repo%%.git}"
+path="/app/flaskfarm"
 
-cd /app
-
-# install or update
-if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" != "true" ]; then
-  echo "*** installing SJVA to '/app'..."
-  git config --global --get-all safe.directory | grep -wq "/app" || \
-    git config --global --add safe.directory "/app"
-  git init --quiet > /dev/null
-  git remote add origin "https://github.com/soju6jan/SJVA3"
-  git fetch --quiet --depth 1
-  git checkout --quiet -f main
-elif [ ! -f "/app/data/.noupdate" ]; then
-  git_pull /app
+# get version to install
+if [[ "${#FF_VERSION}" -eq 40 ]]; then
+    # long hash to short
+    FF_VERSION="${FF_VERSION:0:7}"
 fi
 
-plugin_root="/app/data/custom"
+if [[ ! -n "${FF_VERSION}" ]] || [[ -z "${FF_VERSION}" ]] || \
+    [[ "${FF_VERSION}" == "docker" ]] || [[ "${FF_VERSION}" == "null" ]]; then
+    FF_VERSION="${FF_VERSION_DEFAULT}"
+fi
+
+# check version installed
+GIT_TAG="$(git -C "$path" describe --tags --exact-match 2>/dev/null || :)"
+GIT_BRANCH="$(git -C "$path" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+GIT_HASH="$(git -C "$path" rev-parse --short HEAD 2>/dev/null)"
+
+if [[ "$FF_VERSION" == "$GIT_TAG" ]]; then
+    echo "*** using $repo@$GIT_TAG"
+elif [[ "$FF_VERSION" == "$GIT_HASH" ]]; then
+    echo "*** using $repo@$GIT_HASH"
+elif [[ "$FF_VERSION" == "$GIT_BRANCH" ]]; then
+    git_pull "$path"
+else
+    echo "*** installing $repo@$FF_VERSION"
+    git -C /tmp clone --quiet -b "$FF_VERSION" "$FF_GIT" >/dev/null 2>&1 || \
+        {
+            git -C /tmp clone --quiet "$FF_GIT" >/dev/null 2>&1 ;
+            git -C /tmp/flaskfarm checkout "$FF_VERSION" >/dev/null 2>&1 ;
+        }
+    if is_git_dir /tmp/flaskfarm; then
+        rm -rf "$path" && mv /tmp/flaskfarm "$(dirname "$path")"/
+    else
+        echo "    ERROR: failed to install $repo@$FF_VERSION"
+        echo "*** fallback to $repo@$FF_VERSION_DEFAULT"
+        if ! is_git_dir "$path"; then
+            rm -rf "$path" && \
+                git -C "$(dirname "$path")" clone --depth 1 "$FF_VERSION_DEFAULT" >/dev/null 2>&1 && \
+                echo "    ERROR: fallback to $repo@$FF_VERSION_DEFAULT"
+        fi
+    fi
+    # cleanup
+    rm -rf /tmp/flaskfarm
+fi
+
+plugin_root="/data/plugins"
 if [ "${PLUGIN_UPDATE_FROM_PYTHON}" = "false" ] && [ -d "${plugin_root}" ]; then
   prune_paths=$(find "${plugin_root}" -name .noupdate -printf "-path %h -o ")
   while read -r n; do
@@ -46,5 +60,4 @@ if [ "${PLUGIN_UPDATE_FROM_PYTHON}" = "false" ] && [ -d "${plugin_root}" ]; then
 fi
 
 # permissions
-find /app \! \( -uid $(id -u abc) -gid $(id -g abc) \) -print0 | \
-    xargs -0 --no-run-if-empty chown -h abc:abc
+fix_ownership /data

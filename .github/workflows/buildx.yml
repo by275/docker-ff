@@ -39,7 +39,7 @@ jobs:
             --platform=linux/amd64 \
             --load \
             .
-          CID=$(docker run -d -p 9999:9999 -e USE_CELERY=false ${{ env.IMAGE_NAME }}:testing)
+          CID=$(docker run -d -p 9999:9999 ${{ env.IMAGE_NAME }}:testing)
           sleep 30s
           VER=$(curl -fsSL http://localhost:9999/version)
           docker rm -f $CID
@@ -58,8 +58,8 @@ jobs:
           context: .
           file: Dockerfile
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ env.APP_VER }}
+            ${{ env.IMAGE_NAME }}:ff
+            ${{ env.IMAGE_NAME }}:ff-${{ env.APP_VER }}
           platforms: linux/amd64,linux/arm64
           push: true
       -
