@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ghcr.io/by275/sjva
+  IMAGE_NAME: ghcr.io/by275/ff
 
 jobs:
   buildx:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       -
         name: Checkout
@@ -39,7 +39,7 @@ jobs:
             --platform=linux/amd64 \
             --load \
             .
-          CID=$(docker run -d -p 9999:9999 -e USE_CELERY=false ${{ env.IMAGE_NAME }}:testing)
+          CID=$(docker run -d -p 9999:9999 ${{ env.IMAGE_NAME }}:testing)
           sleep 30s
           VER=$(curl -fsSL http://localhost:9999/version)
           docker rm -f $CID

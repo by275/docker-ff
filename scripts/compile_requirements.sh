@@ -7,7 +7,7 @@ if [ $(docker images -q $name | wc -l) -ne 1 ]; then
     docker run -i \
         --name $name \
         -e "DEBIAN_FRONTEND=noninteractive" \
-        ubuntu:20.04 \
+        ubuntu:22.04 \
         bash -c "apt-get update -qq && apt-get install -yqq python3-pip python3-wheel && python3 -m pip install pip-tools"
     docker commit $name $name
 fi

@@ -1,4 +1,4 @@
-ARG UBUNTU_VER=20.04
+ARG UBUNTU_VER=22.04
 
 FROM ghcr.io/by275/libtorrent:latest-ubuntu${UBUNTU_VER} AS libtorrent
 FROM ghcr.io/by275/base:ubuntu AS prebuilt
@@ -6,6 +6,11 @@ FROM ghcr.io/by275/base:ubuntu${UBUNTU_VER} AS base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG APT_MIRROR="archive.ubuntu.com"
+
+ENV \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
 
 RUN \
     echo "**** prepare apt-get ****" && \
@@ -33,7 +38,7 @@ RUN \
         'libboost-python[0-9.]+$' \
         && \
     if [ ! -e /usr/bin/python ]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
-    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip; fi && \
+    python -m pip install --upgrade pip && \
     sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf && \
     echo "**** cleanup ****" && \
     rm -rf \
@@ -114,7 +119,11 @@ COPY root/ /bar/
 RUN \
     echo "**** directories ****" && \
     mkdir -p \
-        /bar/app/data \
+        /bar/app \
+        && \
+    echo "**** install flaskfarm ****" && \
+    git -C /bar/app clone --depth 1 -b main \
+        "https://github.com/flaskfarm/flaskfarm.git" \
         && \
     echo "**** permissions ****" && \
     chmod a+x \
@@ -141,38 +150,52 @@ RUN \
 # 
 FROM base
 LABEL maintainer="by275"
-LABEL org.opencontainers.image.source https://github.com/by275/docker-sjva
+LABEL org.opencontainers.image.source https://github.com/by275/docker-ff
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
 # SYSTEM ENVs
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
-    PYTHONUNBUFFERED=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_CACHE_DIR=1 \
     PUID=0 \
     PGID=0 \
     TZ=Asia/Seoul \
-    HOME=/app \
-    SJVA_RUNNING_TYPE=docker \
-    SJVA_REPEAT_COUNT=0 \
-    CELERY_APP=sjva3.celery \
-    SJVA_PORT=9999 \
-    REDIS_PORT=46379 \
-    USE_CELERY=true \
-    USE_GEVENT=true \
-    CELERY_WORKER_COUNT=2 \
-    PLUGIN_UPDATE_FROM_PYTHON=false \
-    PATH="/app/data/command:/app/data/bin:/app/.local/bin:$PATH" \
+    HOME=/data \
+    PATH="/data/.local/bin:$PATH" \
     PYTHONPATH="${PYTHONPATH:+$PYTHONPATH:}/app"
+
+# Celery ENVs
+ENV \
+    CELERY_APP=flaskfarm.main.celery \
+    REDIS_PORT=46379
+# recommended celery command
+# celery -A flaskfarm.main.celery --workdir=/data \
+#     worker --concurrency=2 --loglevel=info --pool=gevent \
+#         --config_filepath=/data/config.yaml --running_type=docker \
+#         --without-gossip --without-mingle --without-heartbeat
+
+# Flaskfarm ENVs
+ENV \
+    FF_GIT="https://github.com/flaskfarm/flaskfarm.git" \
+    FF_VERSION=main \
+    FF_VERSION_DEFAULT=main \
+    FF_REPEAT=0 \
+    FF_CONFIG="/data/config.yaml" \
+    PLUGIN_UPDATE_FROM_PYTHON=false \
+    RUNNING_TYPE=docker
+
+# following ENVs are directly passed and recognized by FF
+# REDIS_PORT
+# UPDATE_STOP
+# PLUGIN_UPDATE_FROM_PYTHON
+# RUNNING_TYPE
 
 # add build artifacts
 COPY --from=collector /bar/ /
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=50s --retries=3 \
-    CMD curl -fsS -o /dev/null http://localhost:${SJVA_PORT}/version || exit 1
+    CMD /usr/local/bin/healthcheck
 
-VOLUME /app/data
-EXPOSE ${SJVA_PORT}
+VOLUME /data
+WORKDIR /data
 
 ENTRYPOINT ["/init"]
