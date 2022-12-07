@@ -150,7 +150,7 @@ RUN \
 # 
 FROM base
 LABEL maintainer="by275"
-LABEL org.opencontainers.image.source https://github.com/by275/docker-sjva
+LABEL org.opencontainers.image.source https://github.com/by275/docker-ff
 
 ARG DEBIAN_FRONTEND="noninteractive"
 

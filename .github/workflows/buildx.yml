@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ghcr.io/by275/sjva
+  IMAGE_NAME: ghcr.io/by275/ff
 
 jobs:
   buildx:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       -
         name: Checkout
@@ -58,8 +58,8 @@ jobs:
           context: .
           file: Dockerfile
           tags: |
-            ${{ env.IMAGE_NAME }}:ff
-            ${{ env.IMAGE_NAME }}:ff-${{ env.APP_VER }}
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ env.APP_VER }}
           platforms: linux/amd64,linux/arm64
           push: true
       -
@@ -70,5 +70,5 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           description: |
-            ${{ env.IMAGE_NAME }}:ff
-            ${{ env.IMAGE_NAME }}:ff-${{ env.APP_VER }}
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ env.APP_VER }}

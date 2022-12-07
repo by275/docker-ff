@@ -15,15 +15,3 @@ xmltodict
 tmdbsimple
 tvdb-api
     # plugin/metadata
-# guessit
-#     # plugin/fileprocess_movie
-# PlexAPI
-#     # plugin/plex
-# oauth2client
-# google-api-python-client
-#     # plugin/gdrive_scan
-# watchdog
-#     # plugin/plex_mate
-# gspread
-# gspread_formatting
-#     # lib2/support/tool
