@@ -164,11 +164,6 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
 ENV \
     CELERY_APP=flaskfarm.main.celery \
     REDIS_PORT=46379
-# recommended celery command
-# celery -A flaskfarm.main.celery --workdir=/data \
-#     worker --concurrency=2 --loglevel=info --pool=gevent \
-#         --config_filepath=/data/config.yaml --running_type=docker \
-#         --without-gossip --without-mingle --without-heartbeat
 
 # Flaskfarm ENVs
 ENV \
@@ -179,12 +174,6 @@ ENV \
     FF_CONFIG="/data/config.yaml" \
     PLUGIN_UPDATE_FROM_PYTHON=false \
     RUNNING_TYPE=docker
-
-# following ENVs are directly passed and recognized by FF
-# REDIS_PORT
-# UPDATE_STOP
-# PLUGIN_UPDATE_FROM_PYTHON
-# RUNNING_TYPE
 
 # add build artifacts
 COPY --from=collector /bar/ /
