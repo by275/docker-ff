@@ -22,6 +22,8 @@ RUN \
         python3 \
         python3-pip \
         python3-wheel \
+        `# pre-compiled python packages` \
+        python3-psutil \
         `# core` \
         git \
         sqlite3 \
@@ -58,12 +60,6 @@ ARG DEBIAN_FRONTEND="noninteractive"
 
 COPY requirements.txt /tmp/
 
-RUN \
-    echo "**** prepare apt-get ****" && \
-    apt-get update -qq
-RUN echo "**** install depencencies for psutil ****" && \
-    apt-get install -yqq --no-install-recommends \
-        python3-dev gcc
 RUN echo "**** install pip packages ****" && \
     python3 -m pip install --root=/bar -r /tmp/requirements.txt --no-warn-script-location
 
