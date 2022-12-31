@@ -36,7 +36,6 @@ RUN \
         `# util` \
         jq \
         socat \
-        vnstat \
         `# torrent_info` \
         'libboost-python[0-9.]+$' \
         && \
