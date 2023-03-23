@@ -31,7 +31,7 @@ RUN \
         wget \
         `# minimal` \
         ffmpeg \
-        fuse \
+        fuse3 \
         redis \
         `# util` \
         jq \
