@@ -1,6 +1,6 @@
 #!/usr/bin/with-contenv bash
 
-[ $(redis-cli -h localhost -p ${REDIS_PORT} ping) = "PONG" ] && exit 0
+[ "$(redis-cli -h localhost -p "${REDIS_PORT}" ping)" = "PONG" ] && exit 0
 
 echo "*** redis is getting ready for service..."
 

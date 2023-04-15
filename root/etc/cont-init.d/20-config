@@ -12,7 +12,7 @@ if [[ "${#FF_VERSION}" -eq 40 ]]; then
     FF_VERSION="${FF_VERSION:0:7}"
 fi
 
-if [[ ! -n "${FF_VERSION}" ]] || [[ -z "${FF_VERSION}" ]] || \
+if [[ -z "${FF_VERSION}" ]] || \
     [[ "${FF_VERSION}" == "docker" ]] || [[ "${FF_VERSION}" == "null" ]]; then
     FF_VERSION="${FF_VERSION_DEFAULT}"
 fi
@@ -56,7 +56,7 @@ if [ "${PLUGIN_UPDATE_FROM_PYTHON}" = "false" ] && [ -d "${plugin_root}" ]; then
   while read -r n; do
     # sometimes empty string comes in
     [ -d "${n}" ] && git_pull "${n}"
-  done <<<$(find "${plugin_root}" -maxdepth 1 -mindepth 1 -type d \( $prune_paths -false \) -prune -o -type d -print)
+  done <<<"$(find "${plugin_root}" -maxdepth 1 -mindepth 1 -type d \( $prune_paths -false \) -prune -o -type d -print)"
 fi
 
 # permissions

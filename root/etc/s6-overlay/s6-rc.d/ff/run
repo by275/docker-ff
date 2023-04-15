@@ -6,13 +6,13 @@ if [ "${PUID}" = "0" ] && [ "${PGID}" = "0" ]; then
 fi
 
 # workdir
-cd /data
+cd /data || exit 1
 
 echo "*** starting FlaskFarm..."
 s6-setuidgid abc \
     python -m flaskfarm.main \
-        --repeat=${FF_REPEAT} \
-        --config=${FF_CONFIG}
+        --repeat="${FF_REPEAT}" \
+        --config="${FF_CONFIG}"
 
 EXITCODE=$?
 echo "*** FlaskFarm exited with code ${EXITCODE}"
@@ -21,6 +21,6 @@ if [ "$EXITCODE" = "0" ]; then
     s6-svscanctl -t /var/run/service
 else
     echo "*** restarting services..."
-    printf $(expr $FF_REPEAT + 1) > /var/run/s6/container_environment/FF_REPEAT
+    printf "%d" $((FF_REPEAT + 1)) > /var/run/s6/container_environment/FF_REPEAT
     /etc/cont-init.d/20-config
 fi
