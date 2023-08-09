@@ -20,9 +20,10 @@ if port is None:
     conn.close()
 
 try:
-    res = requests.head(f"http://localhost:{port}/version")
+    proxies = {"http": "", "https": ""}
+    res = requests.head(f"http://localhost:{port}/version", proxies=proxies, verify=False, timeout=5)
 except Exception as e:
-    print(f"ERROR: {str(e)}")    
+    print(f"ERROR: {str(e)}")
 else:
     if res.status_code == 200:
         print("OK")
