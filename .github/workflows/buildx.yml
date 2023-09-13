@@ -47,7 +47,7 @@ jobs:
           echo "APP_VER=$VER" >> $GITHUB_ENV
       -
         name: Login to ghcr.io
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -111,7 +111,7 @@ jobs:
           echo "APP_VER=$VER" >> $GITHUB_ENV
       -
         name: Login to ghcr.io
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
