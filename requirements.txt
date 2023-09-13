@@ -33,8 +33,6 @@ json_fix
     # normal
 -r https://raw.githubusercontent.com/flaskfarm/flaskfarm/main/files/requirements_useful.txt
     # useful
-pillow
-    # custom
 sqlitedict
     # plugin/torrent_info
 discord.py
