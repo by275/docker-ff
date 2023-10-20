@@ -1,5 +1,6 @@
 #flask
 Flask
+Werkzeug<3.0
 Flask-SQLAlchemy
 Flask-Login
 Flask-Cors
