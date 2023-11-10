@@ -1,6 +1,5 @@
 #flask
 Flask
-Werkzeug<3.0
 Flask-SQLAlchemy
 Flask-Login
 Flask-Cors
@@ -8,7 +7,7 @@ Flask-Cors
 Flask-SocketIO
 python-engineio
 python-socketio<5.8.0
-Werkzeug
+Werkzeug<3.0
 Jinja2
 
 # common util
