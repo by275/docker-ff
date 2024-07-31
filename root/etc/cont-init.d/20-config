@@ -61,3 +61,4 @@ fi
 
 # permissions
 fix_ownership /data
+chown abc:abc /app/flaskfarm
