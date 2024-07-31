@@ -6,7 +6,7 @@ updates:
     target-branch: "main"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   # # Maintain dependencies for python
   # - package-ecosystem: "pip"
