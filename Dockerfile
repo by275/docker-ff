@@ -146,7 +146,7 @@ RUN \
 # 
 FROM base
 LABEL maintainer="by275"
-LABEL org.opencontainers.image.source https://github.com/by275/docker-ff
+LABEL org.opencontainers.image.source=https://github.com/by275/docker-ff
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
@@ -157,7 +157,7 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     TZ=Asia/Seoul \
     HOME=/data \
     PATH="/data/.local/bin:$PATH" \
-    PYTHONPATH="${PYTHONPATH:+$PYTHONPATH:}/app"
+    PYTHONPATH=/app
 
 # Celery ENVs
 ENV \
