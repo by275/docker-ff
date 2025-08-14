@@ -12,6 +12,8 @@ env:
 jobs:
   ubuntu:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       -
         name: Checkout
@@ -78,6 +80,8 @@ jobs:
 
   # alpine:
   #   runs-on: ubuntu-latest
+  #   permissions:
+  #     packages: write
   #   steps:
   #     -
   #       name: Checkout
