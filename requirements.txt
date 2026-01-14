@@ -42,3 +42,5 @@ xmltodict
 tmdbsimple
 tvdb-api
     # plugin/metadata
+httpx[http2]
+    # plugin/support_site - wavve api
