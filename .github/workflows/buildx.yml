@@ -8,6 +8,7 @@ on:
 
 env:
   IMAGE_NAME: ghcr.io/by275/ff
+  APP_VER: unknown
 
 jobs:
   ubuntu:
