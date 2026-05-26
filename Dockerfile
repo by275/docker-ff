@@ -60,6 +60,12 @@ ARG DEBIAN_FRONTEND="noninteractive"
 COPY requirements.txt /tmp/
 
 RUN echo "**** install pip packages ****" && \
+    apt-get update -qq && \
+    apt-get install -yqq --no-install-recommends \
+        `# build tools for gevent on ARM64` \
+            build-essential \
+            python3-dev \
+        && \
     python3 -m pip install --root=/bar -r /tmp/requirements.txt --no-warn-script-location
 
 
