@@ -23,9 +23,7 @@ slack-sdk
 # filemanager
 pillow
 
-# Keep arm64 on prebuilt wheels in GitHub Actions; gevent 26.x falls back to
-# source builds on cp310/aarch64 and can crash GCC under QEMU.
-gevent<26
+gevent
 gevent-websocket
 pycryptodome
 json_fix
