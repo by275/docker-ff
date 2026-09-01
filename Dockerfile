@@ -100,8 +100,8 @@ FROM base AS collector
 
 # add s6 overlay
 COPY --from=prebuilt /s6/ /bar/
-ADD https://raw.githubusercontent.com/by275/docker-base/main/_/etc/cont-init.d/install-pkg /bar/etc/cont-init.d/30-install-pkg
-ADD https://raw.githubusercontent.com/by275/docker-base/main/_/etc/cont-init.d/wait-for-mnt /bar/etc/cont-init.d/40-wait-for-mnt
+ADD https://raw.githubusercontent.com/by275/docker-base/main/_/etc/cont-init.d/install-pkg /bar/etc/s6-overlay/scripts/init-install-pkg
+ADD https://raw.githubusercontent.com/by275/docker-base/main/_/etc/cont-init.d/wait-for-mnt /bar/etc/s6-overlay/scripts/init-wait-for-mnt
 
 # add libtorrent libs
 COPY --from=libtorrent /libtorrent-build/usr/lib/ /bar/usr/lib/
@@ -120,6 +120,10 @@ COPY root/ /bar/
 
 RUN \
     echo "**** directories ****" && \
+    rm -rf \
+        /bar/etc/s6-overlay/s6-rc.d/ff \
+        /bar/etc/s6-overlay/s6-rc.d/redis \
+        /bar/package/admin/s6-overlay/etc/s6-rc/sources/top/contents.d/legacy-services && \
     mkdir -p \
         /bar/app \
         && \
@@ -130,22 +134,9 @@ RUN \
     echo "**** permissions ****" && \
     chmod a+x \
         /bar/usr/local/bin/* \
-        /bar/etc/cont-init.d/* \
+        /bar/etc/s6-overlay/scripts/* \
         /bar/etc/s6-overlay/s6-rc.d/*/run \
         /bar/etc/s6-overlay/s6-rc.d/*/data/*
-
-RUN \
-    echo "**** s6: resolve dependencies ****" && \
-    for dir in /bar/etc/s6-overlay/s6-rc.d/*; do mkdir -p "$dir/dependencies.d"; done && \
-    for dir in /bar/etc/s6-overlay/s6-rc.d/*; do touch "$dir/dependencies.d/legacy-cont-init"; done && \
-    echo "**** s6: create a new bundled service ****" && \
-    mkdir -p /tmp/app/contents.d && \
-    for dir in /bar/etc/s6-overlay/s6-rc.d/*; do touch "/tmp/app/contents.d/$(basename "$dir")"; done && \
-    echo "bundle" > /tmp/app/type && \
-    mv /tmp/app /bar/etc/s6-overlay/s6-rc.d/app && \
-    echo "**** s6: deploy services ****" && \
-    rm /bar/package/admin/s6-overlay/etc/s6-rc/sources/top/contents.d/legacy-services && \
-    touch /bar/package/admin/s6-overlay/etc/s6-rc/sources/top/contents.d/app
 
 # 
 # RELEASE

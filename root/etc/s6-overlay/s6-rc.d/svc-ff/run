@@ -22,5 +22,5 @@ if [ "$EXITCODE" = "0" ]; then
 else
     echo "*** restarting services..."
     printf "%d" $((FF_REPEAT + 1)) > /var/run/s6/container_environment/FF_REPEAT
-    /etc/cont-init.d/20-config
+    /etc/s6-overlay/scripts/init-config
 fi
