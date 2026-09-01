@@ -33,16 +33,20 @@ jobs:
           file: Dockerfile
           tags: ${{ env.IMAGE_NAME }}:testing
           platforms: linux/amd64,linux/arm64
+          pull: true
+          cache-from: type=gha,scope=ff
       -
-        name: Load Built Image and Get Variables
-        id: vars
+        name: Load Image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: Dockerfile
+          tags: ${{ env.IMAGE_NAME }}:testing
+          platforms: linux/amd64
+          load: true
+      -
+        name: Get Variable
         run: |
-          docker buildx build \
-            -t ${{ env.IMAGE_NAME }}:testing \
-            -f Dockerfile \
-            --platform=linux/amd64 \
-            --load \
-            .
           CID=$(docker run -d -p 9999:9999 ${{ env.IMAGE_NAME }}:testing)
           sleep 30s
           VER=$(curl -fsSL http://localhost:9999/version)
@@ -66,6 +70,7 @@ jobs:
             ${{ env.IMAGE_NAME }}:${{ env.APP_VER }}
           platforms: linux/amd64,linux/arm64
           push: true
+          cache-to: type=gha,mode=max,scope=ff,ignore-error=true
       -
         name: Notification
         uses: sarisia/actions-status-discord@v1
