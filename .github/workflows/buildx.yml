@@ -6,14 +6,21 @@ on:
       - 'main'
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: bash
+
 env:
   IMAGE_NAME: ghcr.io/by275/ff
-  APP_VER: unknown
 
 jobs:
   ubuntu:
     runs-on: ubuntu-latest
+    concurrency:
+      group: buildx-cache-ff
+      cancel-in-progress: false
     permissions:
+      contents: read
       packages: write
     steps:
       -
@@ -26,33 +33,6 @@ jobs:
         name: Set up Buildx
         uses: docker/setup-buildx-action@v4
       -
-        name: Initial Buildx
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: Dockerfile
-          tags: ${{ env.IMAGE_NAME }}:testing
-          platforms: linux/amd64,linux/arm64
-          pull: true
-          cache-from: type=gha,scope=ff
-      -
-        name: Load Image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: Dockerfile
-          tags: ${{ env.IMAGE_NAME }}:testing
-          platforms: linux/amd64
-          load: true
-      -
-        name: Get Variable
-        run: |
-          CID=$(docker run -d -p 9999:9999 ${{ env.IMAGE_NAME }}:testing)
-          sleep 30s
-          VER=$(curl -fsSL http://localhost:9999/version)
-          docker rm -f $CID
-          echo "APP_VER=$VER" >> $GITHUB_ENV
-      -
         name: Login to ghcr.io
         uses: docker/login-action@v4
         with:
@@ -61,16 +41,40 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       -
         name: Buildx and Push
+        id: build
         uses: docker/build-push-action@v7
         with:
           context: .
           file: Dockerfile
-          tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ env.APP_VER }}
+          tags: ${{ env.IMAGE_NAME }}:ci
           platforms: linux/amd64,linux/arm64
+          pull: true
           push: true
+          cache-from: type=gha,scope=ff
           cache-to: type=gha,mode=max,scope=ff,ignore-error=true
+      -
+        name: Verify Image
+        id: verify
+        run: |
+          CID=$(docker run --pull=always -d -p 9999:9999 "${IMAGE_NAME}@${{ steps.build.outputs.digest }}")
+          trap 'docker rm -f "$CID" >/dev/null 2>&1 || true' EXIT
+
+          for _ in {1..30}; do
+            if VER=$(curl -fsSL http://localhost:9999/version); then
+              break
+            fi
+            sleep 1
+          done
+
+          test -n "${VER:-}"
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+      -
+        name: Promote Tags
+        run: |
+          docker buildx imagetools create \
+            --tag "${IMAGE_NAME}:latest" \
+            --tag "${IMAGE_NAME}:${{ steps.verify.outputs.version || 'unknown' }}" \
+            "${IMAGE_NAME}@${{ steps.build.outputs.digest }}"
       -
         name: Notification
         uses: sarisia/actions-status-discord@v1
@@ -80,4 +84,4 @@ jobs:
           status: ${{ job.status }}
           description: |
             ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ env.APP_VER }}
+            ${{ env.IMAGE_NAME }}:${{ steps.verify.outputs.version || 'unknown' }}
